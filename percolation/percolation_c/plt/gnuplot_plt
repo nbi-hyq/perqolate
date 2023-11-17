@@ -1,0 +1,8 @@
+set title "percolation simulation"
+set yrange [0:1]
+set xrange [0:1]
+set grid
+set key
+list=system('ls -1B *.txt')
+plot for [file in list] file dashtype 2 title file
+pause 60
