@@ -82,26 +82,33 @@ static bool update_ptr_when_new_node_b(Graph* g, int64_t s1, int64_t* big, uint8
   return percolated;
 }
 
-/* helper function: get random number with more than 32-bit precision (uniform) */
-static double rand_63_precision(void) {
-  // 0x7FFF: RAND_MAX guaranteed by C standard.
-  const int64_t b0 = rand() & CSTD_RAND_MAX;
-  const int64_t b1 = rand() & CSTD_RAND_MAX;
-  const int64_t b2 = rand() & CSTD_RAND_MAX;
-  const int64_t b3 = rand() & CSTD_RAND_MAX;
-  const int64_t b4 = rand() & 0x7;
-  const int64_t n = (b0) | (b1 << 15) | (b2 << 30) | (b3 << 45) | (b4 << 60);
-  return (double)n/(double)INT64_MAX;
+/* get random number with 64-bit precision (CSTD_RAND_MAX=0x7FFF: RAND_MAX guaranteed by C standard) */
+static uint64_t rand64(void) {
+  const uint64_t b0 = rand() & CSTD_RAND_MAX;
+  const uint64_t b1 = rand() & CSTD_RAND_MAX;
+  const uint64_t b2 = rand() & CSTD_RAND_MAX;
+  const uint64_t b3 = rand() & CSTD_RAND_MAX;
+  const uint64_t b4 = rand() & 0x15; // last 4 bits
+  const uint64_t k = (b0) | (b1 << 15) | (b2 << 30) | (b3 << 45) | (b4 << 60);
+  return k;
 }
 
-/* helper function: get array with shuffled indices (TBD: correct shuffeling of last element) */
+/* get random number with more than 32-bit precision, uniform in range [0, n) */
+uint64_t rand_range(uint64_t n) {
+  uint64_t max = (1ul << 63) - (1ul << 63) % n - 1;
+  uint64_t r = rand64();
+  while (r > max) r = rand64();
+  return r % n;
+}
+
+/* helper function: get array with shuffled indices */
 int64_t* permutation(int64_t len){
   int64_t* array;
   array = malloc(len * sizeof(int64_t));
   int64_t i,j,temp;
   for (i=0;i<len;i++) array[i] = i;
   for (i=0;i<len;i++){
-    j = i + (int64_t)((len-1-i) * rand_63_precision());
+    j = i + rand_range(len-i);
     temp = array[i];
     array[i] = array[j];
     array[j] = temp;

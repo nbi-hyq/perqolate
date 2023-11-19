@@ -26,6 +26,7 @@ tests = [
   'tree_lattice_site',
   'complex_neighbor_reference',
   'complex_neighbor_reference_b',
+  'random_check',
 ]
 
 foreach t : tests
