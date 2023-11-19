@@ -1,12 +1,20 @@
+# perqolate
+- ```C```-code for percolation simulations of graphs, graph states, fusion networks. The main part of the code is in ```percolation_c/```.
+- Some simulation results can be found here: https://arxiv.org/abs/2304.03796
+
 ## percolation simulations: features
-- determine percolation (cluster spanning) or largest connected component size of graphs (site-, bond-, site-bond, bond-site percolation)
-- test for percolation and largest component size of graph states subject to loss. Loss is simulated by removing neighbors of a lost qubit from the graph resp. measuring them in the Z-basis .
+- Percolation simulations on undirected graphs/lattices. Percolation models: site-, bond-, and site-bond, bond-site
+    - fast speed due to the use of the union-find algorithm by Newman and Ziff (https://doi.org/10.1103/PhysRevE.64.016706)
+- Determine cluster spanning (percolation) or largest connected component size of graphs
 - construct cluster states via rotated type-II fusion of star-shaped resource states. Check the resulting graph for percolation or the largest connected component size as a function of photon loss. Loss of photons used for the fusions is treated by removing/measuring the neighbors of both fusion photons. (see https://arxiv.org/abs/2304.03796 (Fig. A5(d)), https://doi.org/10.1103/PhysRevLett.115.020502 (Fig. 4) for the used linear optics fusion.)
-- construct cluster states via rotated type-II fusion of star-shaped resource states where the fusion is repeated until success. Photon loss is simulated as before.
+- Simulation of fusion network using repeat-until-success method to boost the fusion probability. Photon loss can be simulated. (speed-up with modified Newman-Ziff algorithm)
+- Simutate loss on graph states where loss is simulated by removing neighbors of a lost qubit from the graph by measuring them in the Z-basis. (speed-up with modified Newman-Ziff algorithm)
+- Tests and continuous integration
+- Examples and easy compilation via meson
 
 ## percolation simulations: overview
 
-In the folder ```percolation/percolation_c``` you find a ```C``` implementation that forms the main part of the code. The folder ```percolation/percolation_py``` contains a ```Python```-only implementation that serves mostly as a reference for consistency checks and for plotting illustrations (and thus should not be used for extensive simulations). The following explanation follows the ```C``` implementation.
+In the folder ```percolation_c``` you find a ```C``` implementation that forms the main part of the code. The folder ```percolation_py``` contains a ```Python```-only implementation that serves mostly as a reference for consistency checks and for plotting illustrations (and thus should not be used for extensive simulations). The following explanation follows the ```C``` implementation.
 
 Generally, there are two types of simulations that can be done. The first type of simulation determines the size of the largest connected component of a graph after some random process such as removing edges or loss has been applied. The second type of simulation determines whether or not two sides of a graph lattice are connected (cluster spanning). In the given examples, the parameter ```get_size``` determines which simulation is used (```get_size==true``` for method1 and ```get_size==false``` for method2).
 
@@ -42,7 +50,7 @@ Some functions for constructing a graph can be found in ```src/graph constructio
 
 ## percolation simulations: getting started
 
-To get started, we suggest having a look at the various examples in the folder ```percolation/percolation_c```. The ```C``` implementation uses the build system ```meson``` and you can compile all examples with the following commands:
+To get started, we suggest having a look at the various examples in the folder ```percolation_c```. The ```C``` implementation uses the build system ```meson``` and you can compile all examples with the following commands:
 
 ```
 $ meson setup build --buildtype=release
@@ -67,4 +75,4 @@ In addition, the continous integration will run the tests with ```valgrind``` as
 When adding new features, you can also add new tests by simply adding the name of the tests to the file ```tests/meson.build```.
 
 ## percolation simulations: Python vs. C
-The implementations in ```percolation/percolation_py``` and ```percolation/percolation_C``` are different in some aspects. In contrast to the ```Python``` implementation, the ```C``` implementation has the advantage that a (modified) Newman-Ziff algorithm can be used which makes the simulations much faster.
+The implementations in ```percolation_py``` and ```percolation_C``` are different in some aspects. In contrast to the ```Python``` implementation, the ```C``` implementation has the advantage that a (modified) Newman-Ziff algorithm can be used which makes the simulations much faster.
