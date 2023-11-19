@@ -8,6 +8,7 @@ import multiprocessing
 from itertools import product
 from policy import do_fusion_policy
 
+
 # set up a certain graph, apply loss etc., return relative size of the largest connected component
 def percolation_process(p, q, n_rep, graph, dummy):
     graph.reset_loss()  # reset previous losses (edges, nodes)
@@ -22,14 +23,15 @@ def percolation_process(p, q, n_rep, graph, dummy):
     else:
         return graph.check_start_target_percolation()
 
+
 if __name__ == '__main__':
     pool = multiprocessing.Pool()
     pool = multiprocessing.Pool(processes=4)
     time_stamp = time.time()
     load_session = False
     save_session = True
-    path_name_load = '../../../simulations/1655131436.pkl'
-    folder_save = '../../../simulations/'
+    path_name_load = '1655131436.pkl'
+    folder_save = ''
 
     if load_session:
         dill.load_session(path_name_load)
@@ -47,7 +49,7 @@ if __name__ == '__main__':
 
         # parameters that determine the graph
         l_box = [[30, 30, 30]]  # size, dimension of the simulation
-        l_n_rep = [0]  # number of times a fusion is repeated if it fails (repeating makes only sense if l_static[]==True)
+        l_n_rep = [0]  # no. of times a fusion is repeated if it fails (repeating makes only sense if l_static[]==True)
         l_inter = [(1, 1, 1)]  # if > 1, only edges at interruption point can be lost
         l_shift = [(0, 0, 0)]  # in addition to l_inter
         l_static = [False]  # define nodes that cannot be lost
