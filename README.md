@@ -1,13 +1,13 @@
 # perqolate
-- ```C```-code for percolation simulations of graphs, graph states, fusion networks. The main part of the code is in ```percolation_c/```.
+- ```C```-code for percolation simulations of undirected graphs, graph states, fusion networks.
 - Some simulation results can be found here: https://arxiv.org/abs/2304.03796
 
 ## percolation simulations: features
-- Percolation simulations on undirected graphs/lattices. Percolation models: site-, bond-, and site-bond, bond-site
-    - fast speed due to the use of the union-find algorithm by Newman and Ziff (https://doi.org/10.1103/PhysRevE.64.016706)
-- Determine cluster spanning (percolation) or largest connected component size of graphs
-- construct cluster states via rotated type-II fusion of star-shaped resource states. Check the resulting graph for percolation or the largest connected component size as a function of photon loss. Loss of photons used for the fusions is treated by removing/measuring the neighbors of both fusion photons. (see https://arxiv.org/abs/2304.03796 (Fig. A5(d)), https://doi.org/10.1103/PhysRevLett.115.020502 (Fig. 4) for the used linear optics fusion.)
-- Simulation of fusion network using repeat-until-success method to boost the fusion probability. Photon loss can be simulated. (speed-up with modified Newman-Ziff algorithm)
+- Percolation simulations of graphs/lattices. Percolation models: site-, bond-, and site-bond, bond-site
+    - fast due to the use of the algorithm by Newman and Ziff (https://doi.org/10.1103/PhysRevE.64.016706)
+- Determine cluster spanning (percolation) or largest connected component size of graphs.
+- Simulate fusion networks constructing large graph states via rotated type-II fusion of star-shaped resource states (see https://arxiv.org/abs/2304.03796 (Fig. A5(d)), https://doi.org/10.1103/PhysRevLett.115.020502 (Fig. 4) for type-II fusion.). Loss of photons used for the fusions is treated by removing/measuring the neighbors of both fusion photons. (speed-up with modified Newman-Ziff algorithm)
+- Simulation of fusion network using repeat-until-success method to boost the fusion probability. Photon loss can be simulated efficiently with modified Newman-Ziff algorithm.
 - Simutate loss on graph states where loss is simulated by removing neighbors of a lost qubit from the graph by measuring them in the Z-basis. (speed-up with modified Newman-Ziff algorithm)
 - Tests and continuous integration
 - Examples and easy compilation via meson
