@@ -20,27 +20,27 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
         run: sudo apt update && sudo apt install -y valgrind
       - name: Build
-        working-directory: ./percolation/percolation_c
+        working-directory: ./percolation_c
         run: meson setup build && meson compile -C build
       - name: Test
-        working-directory: ./percolation/percolation_c
+        working-directory: ./percolation_c
         run: meson test -C build
       - name: Valgrind
         if: contains(matrix.os, 'ubuntu')
-        working-directory: ./percolation/percolation_c
+        working-directory: ./percolation_c
         run: meson test -C build --wrap "valgrind --memcheck:leak-check=full --memcheck:show-leak-kinds=definite --memcheck:error-exitcode=1"
         shell: bash
       - name: Dependencies2 (shared)
         run: pip install numpy matplotlib networkx scipy
       - name: python-test stabilizer
-        working-directory: ./tests
+        working-directory: ./percolation_py/tests
         run: python stabilizer_states_unit_test.py
         shell: bash
       - name: python-test graph
-        working-directory: ./tests
+        working-directory: ./percolation_py/tests
         run: python graph_states_unit_test.py
         shell: bash
       - name: python-test percolation
-        working-directory: ./tests
+        working-directory: ./percolation_py/tests
         run: python unit_test_percolation.py
         shell: bash
