@@ -14,7 +14,7 @@ int main(){
 
   // 4D diamond bond percolation
   Graph g = get_nd_simple_cubic_modified(30, 4, false, true, false, true, 0, 0, false, false, true);
-  float sweep_prob[SWEEP_LEN] = {0.26, 0.28};
+  float sweep_prob[SWEEP_LEN] = {0.255, 0.285};
   int64_t idxLambda;
   int64_t* percolated = percolate_bond(&g, 1.0, &idxLambda);
   float* expectation_value = get_expectation_value(sweep_prob, SWEEP_LEN, percolated, g.num_edges, 0, 1, true, true); // compute a bond-percolation curve (from bond sweep)

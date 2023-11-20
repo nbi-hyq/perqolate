@@ -11,7 +11,7 @@
 
 /* reference percolation simulations (using Newman-Ziff method) */
 int main(){
-  srand(247822);
+  srand(388783);
   int64_t lsize = 60; // size in each dimension
   bool periodic = false; // no periodic boundaries
   bool get_size = false; // check percolation, not determine size of largest connected component
@@ -45,7 +45,7 @@ int main(){
   free(expectation_value);
   free(percolated);
 
-  sweep_prob[0] = 0.104; sweep_prob[1] = 0.110;
+  sweep_prob[0] = 0.102; sweep_prob[1] = 0.112;
   percolated = percolate_bond(&g, 1.0, &idxLambda); // bond-percolation given fixed site probability (Newman-Ziff method)
   expectation_value = get_expectation_value(sweep_prob, SWEEP_LEN, percolated, g.num_edges, 0, 1, true, false); // compute a bond-percolation curve
   if(expectation_value[0] > 0.5) r = -1; // below percolation threshold
@@ -125,7 +125,7 @@ int main(){
   free(percolated);
   */
 
-  sweep_prob[0] = 0.072; sweep_prob[1] = 0.078;
+  sweep_prob[0] = 0.071; sweep_prob[1] = 0.078;
   percolated = percolate_bond(&g, 1.0, &idxLambda); // bond-percolation given fixed site probability (Newman-Ziff method)
   expectation_value = get_expectation_value(sweep_prob, SWEEP_LEN, percolated, g.num_edges, 0, 1, true, false); // compute a bond-percolation curve
   if(expectation_value[0] > 0.5) r = -1; // below percolation threshold
