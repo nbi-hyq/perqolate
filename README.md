@@ -40,13 +40,15 @@ Some functions for constructing a graph can be found in ```src/graph constructio
 - ```get_2d_triangular```: triangular lattice graph in two dimensions.
 - ```get_tree_lattice```: graph that is a tree (e.g. the Bethe lattice)
 - ```get_nd_simple_cubic```: graph that is an n-dimensional simple cubic lattice.
-- ```get_nd_simple_cubic_block```: many blocks with a hypercubic lattice. Between the blocks, there is one layer of nodes which are only connected in the direction perpendicular to the two blocks next to them.
 - ```get_nd_simple_cubic_modified```: graph that is an n-dimensional lattice including simple cubic, diamond, fcc, bcc
+- ```get_lattice_from_nd_simple_cubic_and_vectors```: create a lattice by specifying connection vectors between points on a hypercubic lattice. (can be used to construct complex neighborhoods)
 - ```get_raussendorf_lattice```: lattice from https://doi.org/10.1016/j.aop.2006.01.012
+- ```get_nd_simple_cubic_block```: many blocks with a hypercubic lattice. Between the blocks, there is one layer of nodes which are only connected in the direction perpendicular to the two blocks next to them.
+
+The following functions do not generate connected graphs but fusions are specified via (```g.fusion_partner```). The implementations are experimental or serve just as a reference:
 - ```get_5qubit_stars_for_2d_square```: 5-qubit star-shaped (mutually unconnected) graph states on a square lattice
 - ```get_3qubit_GHZ_for_2d_square```: use to determine bond-percolation threshold from https://doi.org/10.1038/s41467-019-08948-x (Fig. 4)
-- ```get_lattice_from_nd_simple_cubic_and_vectors```: create a lattice by specifying connection vectors between points on a hypercubic lattice.
-- ```get_GHZ_stars_for_nd_simple_cubic```: graph consisting of many micro-graph-states. Those can be fused to a large graph that will form an n-dimensional simple cubic lattice (if all fusions work and there is no photon loss).
+- ```get_GHZ_stars_for_nd_simple_cubic```: Micro-graph-states that can be fused to a large graph that will form an n-dimensional simple cubic lattice (if all fusions work and there is no loss).
 
 ## percolation simulations: getting started
 

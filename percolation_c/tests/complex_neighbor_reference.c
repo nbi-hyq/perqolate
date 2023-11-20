@@ -84,7 +84,7 @@ int main(){
   free(percolated);
   */
 
-  sweep_prob[0] = 0.096; sweep_prob[1] = 0.104;
+  sweep_prob[0] = 0.095; sweep_prob[1] = 0.105;
   percolated = percolate_bond(&g, 1.0, &idxLambda); // bond-percolation given fixed site probability (Newman-Ziff method)
   expectation_value = get_expectation_value(sweep_prob, SWEEP_LEN, percolated, g.num_edges, 0, 1, true, false); // compute a bond-percolation curve
   if(expectation_value[0] > 0.5) r = -1; // below percolation threshold
