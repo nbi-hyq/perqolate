@@ -25,6 +25,8 @@ int main(){
   percolated = apply_loss(&g, 0.93);
   if(percolated < 1) r |= -1;
 
+  g.fusion_node = malloc(g.nnode * sizeof(bool)); // required for apply_loss_bfs
+
   // below percolation threshold
   percolated = apply_loss_bfs(&g, 0.83);
   if(percolated > 0) r = -1;

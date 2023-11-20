@@ -19,7 +19,7 @@ typedef struct {
   bool failed;
 } Graph;
 
-Graph new_graph(int64_t nnode, uint8_t num_nb_max, bool get_size);
+Graph new_graph(int64_t nnode, uint8_t num_nb_max, bool get_size, bool edge_list, bool fusion_list);
 void free_graph(Graph* g);
 
 #endif

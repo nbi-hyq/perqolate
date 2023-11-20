@@ -88,7 +88,7 @@ static uint64_t rand64(void) {
   const uint64_t b1 = rand() & CSTD_RAND_MAX;
   const uint64_t b2 = rand() & CSTD_RAND_MAX;
   const uint64_t b3 = rand() & CSTD_RAND_MAX;
-  const uint64_t b4 = rand() & 0x15; // last 4 bits
+  const uint64_t b4 = rand();
   const uint64_t k = (b0) | (b1 << 15) | (b2 << 30) | (b3 << 45) | (b4 << 60);
   return k;
 }

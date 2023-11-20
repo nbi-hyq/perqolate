@@ -25,6 +25,8 @@ int main(){
   largest_component_size = apply_loss(&g, 0.94);
   if((float)largest_component_size / g.nnode < 0.5) r |= -1;
 
+  g.fusion_node = malloc(g.nnode * sizeof(bool)); // required for apply_loss_bfs
+
   // below percolation threshold
   largest_component_size = apply_loss_bfs(&g, 0.83);
   if((float)largest_component_size / g.nnode > 0.1) r = -1;

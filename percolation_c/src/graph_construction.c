@@ -67,7 +67,7 @@ static int64_t digital_vec_to_index(int64_t* vec, uint8_t n_dim, int64_t lsize){
 Graph get_2d_square(int64_t lsize, bool periodic, bool get_size, bool edge_list){
   int64_t i;
   uint8_t num_nb_max = 4;
-  Graph g = new_graph(lsize*lsize, num_nb_max, get_size);
+  Graph g = new_graph(lsize*lsize, num_nb_max, get_size, edge_list, false);
   if (periodic) { // construct graph with periodic boundaries
     for (i=0; i<g.nnode; i++){
       g.nn[i*g.num_nb_max + 0] = (i+1)%g.nnode;
@@ -109,7 +109,7 @@ Graph get_2d_triangular(int64_t lsize, bool periodic, bool get_size, bool edge_l
   int64_t x, y, i;
   uint8_t idx;
   uint8_t num_nb_max = 6;
-  Graph g = new_graph(lsize * lsize, num_nb_max, get_size);
+  Graph g = new_graph(lsize * lsize, num_nb_max, get_size, edge_list, false);
   for (x=0; x<lsize; x++){
     for (y=0; y<lsize; y++){
       idx = 0;
@@ -176,7 +176,7 @@ Graph get_tree_lattice(uint8_t depth_max, uint8_t* num_child, bool static_center
       num_nb_max = num_child[i] + (i>0); // +1 for link to node above (except root node at depth==0)
     }
   }
-  Graph g = new_graph(nnode, num_nb_max, get_size);
+  Graph g = new_graph(nnode, num_nb_max, get_size, edge_list, false);
   if(!get_size){
     memset(g.start,0,g.nnode*sizeof(bool));
     memset(g.stop,0,g.nnode*sizeof(bool));
@@ -198,7 +198,7 @@ Graph get_nd_simple_cubic(int64_t lsize, uint8_t n_dim, bool static_center, bool
   int64_t numNodes = 1;
   uint8_t num_nb_max = 2*n_dim; // maximum number of neighbors
   for(uint8_t j=0;j<n_dim;j++) numNodes *= lsize; // number of nodes
-  Graph g = new_graph(numNodes, num_nb_max, get_size);
+  Graph g = new_graph(numNodes, num_nb_max, get_size, edge_list, false);
   int64_t i_vec[n_dim]; // digital system representation
   uint8_t digit_pos, nbIdx;
   int64_t iNb; // index of neighbor
@@ -256,7 +256,7 @@ Graph get_nd_simple_cubic_block(int64_t lsize, int lblock, uint8_t n_dim, bool s
   int64_t lTotal = (lblock + 1)*lsize; // totat length of lattice in one dimension
   uint8_t num_nb_max = 2*n_dim; // maximum number of neighbors
   for(uint8_t j=0; j<n_dim; j++) numNodes *= lTotal; // number of nodes
-  Graph g = new_graph(numNodes, num_nb_max, get_size);
+  Graph g = new_graph(numNodes, num_nb_max, get_size, edge_list, false);
   int64_t i_vec[n_dim]; // digital system representation
   for(int64_t i_node=0;i_node<numNodes;i_node++){
     index_to_digital_vec(i_node, i_vec, n_dim, lTotal); // get digital system representation (i_vec) of i_node
@@ -342,7 +342,9 @@ Graph renormalize_block_fusion_net(Graph* g, float pSite, uint8_t nFusionPhotons
   /* create graph for renormalized lattice */
   int64_t nnode_rn = 1; // number of nodes in renormalized lattice
   for(uint8_t j=0; j<n_dim; j++) nnode_rn *= lsize;
-  Graph rn = new_graph(nnode_rn, g->num_nb_max, get_size); // create renormalized lattice
+  bool edge_list = true; // if one wants to loop edges later
+  bool fusion_list = true; // if one wants to loop edges later
+  Graph rn = new_graph(nnode_rn, g->num_nb_max, get_size, edge_list, fusion_list); // create renormalized lattice
   memset(rn.len_nb, 0, rn.nnode); // start with empty graph
   memset(rn.fusion_node, 0, sizeof(bool)*rn.nnode); // only relevant for some functions applied to renormalized graph afterwards
   if(!rn.get_size){
@@ -450,7 +452,7 @@ Graph get_raussendorf_lattice(int64_t lsize, bool static_center, bool periodic, 
   int64_t nCell = 1; // number of all unit cells
   uint8_t num_nb_max = 4; // number of neighbors
   for(uint8_t j=0;j<n_dim;j++) nCell *= lsize; // number of nodes
-  Graph g = new_graph(nCell*nUnit, num_nb_max, get_size);
+  Graph g = new_graph(nCell*nUnit, num_nb_max, get_size, edge_list, false);
   int64_t i_vec[n_dim]; // digital system representation (of unit cell index)
   memset(g.len_nb, 0, nCell*nUnit);
   for(int64_t i_cell=0;i_cell<nCell;i_cell++){
@@ -540,7 +542,7 @@ Graph get_nd_simple_cubic_modified(int64_t lsize, uint8_t n_dim, bool static_cen
   if(bcc && num_diag_max < n_dim) num_nb_max += num_bcc; // count bcc diagonal connections (if not part of general diagonals)
   if(num_diag_max > 1) num_nb_max += get_additional_edge_num(n_dim, num_diag_min, num_diag_max); // count all other diagonal edges
 
-  Graph g = new_graph(numNodes, num_nb_max, get_size);
+  Graph g = new_graph(numNodes, num_nb_max, get_size, edge_list, false);
 
   if(diamond && periodic && lsize % 2 == 1){
     printf("%s\n", "leave out every second edge, periodic, odd lsize: would lead to unidirectional edges at the boundaries");
@@ -704,7 +706,7 @@ Graph get_lattice_from_nd_simple_cubic_and_vectors(int64_t lsize, uint8_t n_dim,
   for(uint8_t j=0;j<n_dim;j++) numNodes *= lsize; // number of nodes
   if(2 * num_vecs > 256 - 1) printf("%s\n", "error: too many neighbors");
   uint8_t num_nb_max = 2 * num_vecs; // maximum number of neighbors
-  Graph g = new_graph(numNodes, num_nb_max, get_size);
+  Graph g = new_graph(numNodes, num_nb_max, get_size, edge_list, false);
 
   int64_t i_vec[n_dim]; // digital system representation (of node index)
   for(int64_t i_node=0;i_node < numNodes;i_node++){
@@ -748,7 +750,7 @@ Graph get_GHZ_stars_for_nd_simple_cubic(int64_t lsize, uint8_t n_dim, bool stati
   int64_t num_mu = 2*n_dim + 1; // size of micro-cluster: 2 neighbors in star per dimension plus central node
   uint8_t num_nb_max = 2*n_dim; // maximum number of neighbors
   for(uint8_t j=0;j<n_dim;j++) num_cluster *= lsize; // number of star micro-clusters
-  Graph g = new_graph(num_cluster * num_mu, num_nb_max, get_size);
+  Graph g = new_graph(num_cluster * num_mu, num_nb_max, get_size, false, true);
   int64_t i_vec_cluster[n_dim]; // digital system representation (of cluster index)
   uint8_t digit_pos;
   int64_t i_nb_cluster, i_node; // index of neighboring cluster, node index
@@ -821,7 +823,7 @@ Graph get_5qubit_stars_for_2d_square(int64_t lsize, bool static_center, bool per
   uint8_t num_nb_max = 4; // maximum number of neighbors
   int64_t num_mu = 5; // size of micro-cluster
   int64_t num_cluster = lsize*lsize;
-  Graph g = new_graph(num_cluster * num_mu, num_nb_max, get_size); // 4 qubits for fusion per site, + 1 qubits in center
+  Graph g = new_graph(num_cluster * num_mu, num_nb_max, get_size, false, true); // 4 qubits for fusion per site, + 1 qubits in center
   for(int64_t i=0; i<num_cluster; i++){ // loop over all micro-clusters
     for(uint8_t k=0;k<num_nb_max;k++) g.nn[i*num_mu*num_nb_max + k] = i*num_mu + k + 1; // central node
     g.len_nb[i*num_mu + 0] = num_nb_max;
@@ -866,7 +868,7 @@ Graph get_3qubit_GHZ_for_2d_square(int64_t lsize, bool static_center, bool perio
   uint8_t num_nb_max = 2; // maximum number of neighbors
   int64_t num_mu = 9; // size of micro-cluster unit cell
   int64_t num_cluster = lsize*lsize;
-  Graph g = new_graph(num_cluster * num_mu, num_nb_max, get_size);
+  Graph g = new_graph(num_cluster * num_mu, num_nb_max, get_size, false, true);
   int64_t x, y, k, idx_node;
   for(x=0;x<lsize;x++){
     for(y=0;y<lsize;y++){

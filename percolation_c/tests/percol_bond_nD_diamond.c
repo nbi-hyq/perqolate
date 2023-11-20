@@ -13,8 +13,8 @@ int main(){
   srand(135679);
 
   // 4D diamond bond percolation
-  Graph g = get_nd_simple_cubic_modified(30, 4, false, true, false, true, 0, 0, false, false, true);
-  float sweep_prob[SWEEP_LEN] = {0.255, 0.285};
+  Graph g = get_nd_simple_cubic_modified(35, 4, false, true, false, true, 0, 0, false, false, true);
+  float sweep_prob[SWEEP_LEN] = {0.255, 0.285}; // 0.2715 expected from: https://doi.org/10.1142/S0129183198000431
   int64_t idxLambda;
   int64_t* percolated = percolate_bond(&g, 1.0, &idxLambda);
   float* expectation_value = get_expectation_value(sweep_prob, SWEEP_LEN, percolated, g.num_edges, 0, 1, true, true); // compute a bond-percolation curve (from bond sweep)
@@ -22,6 +22,7 @@ int main(){
   int r = (expectation_value[0] > 0.1 ? -1 : 0);
   // above percolation threshold
   if(expectation_value[1] < 0.8) r |= -1;
+
   free_graph(&g);
   free(percolated);
   free(expectation_value);
