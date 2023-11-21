@@ -6,7 +6,6 @@
 #include "../inc/global.h"
 #include "../inc/graph_type.h"
 #include "../inc/graph_construction.h"
-#define CSTD_RAND_MAX (0x7FFF)
 
 // find root and path compression
 int64_t findroot(Graph* g, int64_t i){
