@@ -60,10 +60,14 @@ int main(){
     if (num[j] < 1ul << 62) cnt_low++;
     //printf("%li\n", num[j]);
   }
-  if (cnt_low > num_rep/2 + 5*sqrt(num_rep)/2 || cnt_low < num_rep/2 - 5*sqrt(num_rep)/2) rt = 1;
-  printf("%f %i %f\n", num_rep/2 - 5*sqrt(num_rep)/2, cnt_low, num_rep/2 + 5*sqrt(num_rep)/2);
-  if (mean > (1ul << 62) + (double)(1ul << 62)/sqrt(12)/sqrt(num_rep)*5 || mean < (1ul << 62) - (double)(1ul << 62)/sqrt(12)/sqrt(num_rep)*5) rt = 1;
-  printf("%f\n %f\n %f\n", (1ul << 62) - (double)(1ul << 62)/sqrt(12)/sqrt(num_rep)*5, mean, (1ul << 62) + (double)(1ul << 62)/sqrt(12)/sqrt(num_rep)*5);
+  if (cnt_low > num_rep/2 + 5*sqrt(num_rep)/2 || cnt_low < num_rep/2 - 5*sqrt(num_rep)/2){
+    rt = 1;
+    printf("%f %i %f\n", num_rep/2 - 5*sqrt(num_rep)/2, cnt_low, num_rep/2 + 5*sqrt(num_rep)/2);
+  }
+  if (mean > (1ul << 62) + (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5 || mean < (1ul << 62) - (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5){
+    rt = 1;
+    printf("%f\n %f\n %f\n", (1ul << 62) - (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5, mean, (1ul << 62) + (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5);
+  }
   free(num);
 
   printf("%i", rt);
