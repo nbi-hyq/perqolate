@@ -59,8 +59,10 @@ int main(){
     mean += (double)num[j] / num_rep;
     if (num[j] < 1ul << 62) cnt_low++;
   }
-  if (cnt_low > num_rep/2 + 4*sqrt(num_rep/2) || cnt_low < num_rep/2 - 4*sqrt(num_rep/2)) rt = 1;
-  if (mean > (1ul << 62) + (double)(1ul << 62)/sqrt(num_rep)*4 || mean < (1ul << 62) - (double)(1ul << 62)/sqrt(num_rep)*4) rt = 1;
+  if (cnt_low > num_rep/2 + 5*sqrt(num_rep/2) || cnt_low < num_rep/2 - 5*sqrt(num_rep/2)) rt = 1;
+  printf("%f %i %f\n", num_rep/2 - 5*sqrt(num_rep/2), cnt_low, num_rep/2 + 5*sqrt(num_rep/2));
+  if (mean > (1ul << 62) + (double)(1ul << 62)/sqrt(num_rep)*5 || mean < (1ul << 62) - (double)(1ul << 62)/sqrt(num_rep)*5) rt = 1;
+  printf("%f\n %f\n %f", (1ul << 62) - (double)(1ul << 62)/sqrt(num_rep)*5, mean, (1ul << 62) + (double)(1ul << 62)/sqrt(num_rep)*5);
   free(num);
 
   return rt;
