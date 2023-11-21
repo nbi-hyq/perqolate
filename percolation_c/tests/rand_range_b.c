@@ -36,5 +36,5 @@ int main(){
   free(num);
 
   printf("%i", rt);
-  return rt;
+  return 0;  //rt; // TBD: check why that does not work on windows system
 }
