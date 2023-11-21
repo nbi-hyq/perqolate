@@ -1,6 +1,4 @@
-import sys
-sys.path.insert(0, '../../quantum_states')  # add directory above for import
-from graph_states import GraphState
+from quantum_states.graph_states import GraphState
 from scipy.spatial import ConvexHull
 from scipy.optimize import linprog
 import matplotlib.pyplot as plt

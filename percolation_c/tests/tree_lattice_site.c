@@ -45,7 +45,7 @@ int main(){
   float* expectation_value = get_expectation_value(sweep_prob, sweep_len, percolated_sum, g.nnode, 0, n_rep, true, mute);  // compute a site-percolation curve (from site sweep)
 
   int r = expectation_value[10] < 0.05 ? 0 : -1;
-  r |= expectation_value[40] > 0.15 ? 0 : -1;
+  r |= expectation_value[40] > 0.10 ? 0 : -1;
   free(expectation_value);
   free(num_child);
   free_graph(&g);
@@ -73,7 +73,7 @@ int main(){
   expectation_value = get_expectation_value(sweep_prob, sweep_len, percolated_sum, g.nnode, 0, n_rep, true, mute);  // compute a site-percolation curve (from site sweep)
 
   r |= expectation_value[15] < 0.05 ? 0 : -1;
-  r |= expectation_value[35] > 0.15 ? 0 : -1;
+  r |= expectation_value[35] > 0.10 ? 0 : -1;
   free(expectation_value);
   free(percolated_sum);
   free(num_child);

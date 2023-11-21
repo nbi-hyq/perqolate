@@ -11,8 +11,8 @@ from policy import do_fusion_policy
 time_stamp = time.time()
 load_session = False
 save_session = True
-path_name_load = '../../../simulations/1670314534.pkl'
-folder_save = '../../../simulations/'
+path_name_load = '1670314534.pkl'
+folder_save = ''
 
 if load_session:
     dill.load_session(path_name_load)

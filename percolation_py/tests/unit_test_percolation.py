@@ -4,7 +4,7 @@ import numpy as np
 import time
 sys.path.insert(0, '../quantum_states')  # add directory above for import
 from graph_states import GraphState
-sys.path.insert(0, '../percolation/percolation_py')  # add directory above for import
+sys.path.insert(0, '../')  # add directory above for import
 from graph_construction import GraphPlusConstruction, index_to_digital_vec, digital_vec_to_index
 
 np.random.seed(172473)  # fix the seed

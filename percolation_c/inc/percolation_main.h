@@ -4,6 +4,7 @@
 int64_t findroot(Graph* g, int64_t i);
 int64_t merge_root(Graph* g, int64_t r1, int64_t r2, int64_t* big);
 int64_t get_edge_idx(Graph* g, int64_t s1, int64_t s2);
+uint64_t rand_range(uint64_t n);
 int64_t* permutation(int64_t len);
 int64_t* permutation_static_first(int64_t len, bool staticFirst, bool* arryStatic, int64_t* numStatic);
 int64_t bfs_full(Graph* g);
