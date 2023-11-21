@@ -24,8 +24,10 @@ tests = [
   'percol_loss_2d_triangular',
   'percol_loss_nz_2d_triangular',
   'tree_lattice_site',
-  'complex_neighbor_reference',
-  'complex_neighbor_reference_b',
+  'complex_neighbor_reference_NN_4NN',
+  'complex_neighbor_reference_2NN_4NN',
+  'complex_neighbor_reference_3NN_4NN',
+  'complex_neighbor_reference_NN_2NN_3NN',
   'random_check',
 ]
 
