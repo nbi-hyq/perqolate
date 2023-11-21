@@ -29,7 +29,8 @@ tests = [
   'complex_neighbor_reference_3NN_4NN',
   'complex_neighbor_reference_NN_2NN_3NN',
   'check_permutation',
-  'check_rand_range',
+  'rand_range_a',
+  'rand_range_b',
 ]
 
 foreach t : tests
