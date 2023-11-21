@@ -82,13 +82,13 @@ static bool update_ptr_when_new_node_b(Graph* g, int64_t s1, int64_t* big, uint8
   return percolated;
 }
 
-/* get random number with 64-bit precision (CSTD_RAND_MAX=0x7FFF: RAND_MAX guaranteed by C standard) */
-static uint64_t rand64(void) {
+/* get random number in range [0, 1ul<<64) (CSTD_RAND_MAX=0x7FFF: RAND_MAX guaranteed by C standard) */
+static uint64_t rand63(void) {
   const uint64_t b0 = rand() & CSTD_RAND_MAX;
   const uint64_t b1 = rand() & CSTD_RAND_MAX;
   const uint64_t b2 = rand() & CSTD_RAND_MAX;
   const uint64_t b3 = rand() & CSTD_RAND_MAX;
-  const uint64_t b4 = rand();
+  const uint64_t b4 = rand() & 0x7; // 3 more bits
   const uint64_t k = (b0) | (b1 << 15) | (b2 << 30) | (b3 << 45) | (b4 << 60);
   return k;
 }
@@ -96,8 +96,8 @@ static uint64_t rand64(void) {
 /* get random number with more than 32-bit precision, uniform in range [0, n) */
 uint64_t rand_range(uint64_t n) {
   uint64_t max = (1ul << 63) - (1ul << 63) % n - 1;
-  uint64_t r = rand64();
-  while (r > max) r = rand64();
+  uint64_t r = rand63();
+  while (r > max) r = rand63();
   return r % n;
 }
 

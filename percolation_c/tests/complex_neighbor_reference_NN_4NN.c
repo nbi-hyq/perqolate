@@ -35,7 +35,7 @@ int main(){
 
   Graph g = get_lattice_from_nd_simple_cubic_and_vectors(lsize, dimension, vecs, num_vec, static_center, periodic, get_size, list_edges);
 
-  float sweep_prob[SWEEP_LEN] = {0.144, 0.157};
+  float sweep_prob[SWEEP_LEN] = {0.142, 0.157};
   int64_t idxLambda;
   int64_t* percolated = percolate_site(&g, 1.0, &idxLambda); // site-percolation given fixed bond probability (Newman-Ziff method)
   float* expectation_value = get_expectation_value(sweep_prob, SWEEP_LEN, percolated, g.nnode, 0, 1, true, false); // compute a site-percolation curve
