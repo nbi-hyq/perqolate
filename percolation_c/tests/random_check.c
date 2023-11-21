@@ -43,10 +43,25 @@ int main(){
     for (uint64_t i=0; i < a_rg[j]; i++){
       int h = num_rep / a_rg[j];
       if (frequ[i] < h - 4*sqrt(h) || frequ[i] > h + 4*sqrt(h)) rt = 1;
-      printf("%f %i %f\n ", h - 5*sqrt(h), frequ[i], h + 5*sqrt(h));
+      printf("%f %i %f\n ", h - 4*sqrt(h), frequ[i], h + 4*sqrt(h));
     }
     free(frequ);
   }
+
+  /* simple check for random number uniformity over maximum range */
+  uint64_t n_max = 1ul << 63;
+  double mean = 0;
+  int cnt_low = 0;
+  num_rep = 100000;
+  uint64_t* num = malloc(num_rep * sizeof(uint64_t));
+  for (int j=0; j<num_rep; j++){
+    num[j] = rand_range(n_max);
+    mean += (double)num[j] / num_rep;
+    if (num[j] < 1ul << 62) cnt_low++;
+  }
+  if (cnt_low > num_rep/2 + 4*sqrt(num_rep/2) || cnt_low < num_rep/2 - 4*sqrt(num_rep/2)) rt = 1;
+  if (mean > (1ul << 62) + (double)(1ul << 62)/sqrt(num_rep)*4 || mean < (1ul << 62) - (double)(1ul << 62)/sqrt(num_rep)*4) rt = 1;
+  free(num);
 
   return rt;
 }
