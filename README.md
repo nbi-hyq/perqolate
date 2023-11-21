@@ -2,7 +2,7 @@
 - ```C```-code for percolation simulations of undirected graphs, graph states, fusion networks.
 - Some simulation results can be found here: https://arxiv.org/abs/2304.03796
 
-## percolation simulations: features
+## features
 - Percolation simulations of graphs/lattices. Percolation models: site-, bond-, and site-bond, bond-site
     - fast due to the use of the algorithm by Newman and Ziff (https://doi.org/10.1103/PhysRevE.64.016706)
 - Determine cluster spanning (percolation) or largest connected component size of graphs.
@@ -12,9 +12,9 @@
 - Tests and continuous integration
 - Examples and easy compilation via meson
 
-## percolation simulations: overview
+## overview
 
-In the folder ```percolation_c``` you find a ```C``` implementation that forms the main part of the code. The folder ```percolation_py``` contains a ```Python```-only implementation that serves mostly as a reference for consistency checks and for plotting illustrations (and thus should not be used for extensive simulations). The following explanation follows the ```C``` implementation.
+In the folder ```percolation_c``` you find a ```C``` implementation that forms the main part of the code. The folder ```percolation_py``` contains a ```Python``` implementation that serves mostly as a reference for consistency checks and for plotting illustrations. It should not be used for extensive simulations as it is much slower than the ``C``` code. The following explanation follows the ```C``` implementation.
 
 Generally, there are two types of simulations that can be done. The first type of simulation determines the size of the largest connected component of a graph after some random process such as removing edges or loss has been applied. The second type of simulation determines whether or not two sides of a graph lattice are connected (cluster spanning). In the given examples, the parameter ```get_size``` determines which simulation is used (```get_size==true``` for method1 and ```get_size==false``` for method2).
 
@@ -50,7 +50,7 @@ The following functions do not generate connected graphs but fusions are specifi
 - ```get_3qubit_GHZ_for_2d_square```: use to determine bond-percolation threshold from https://doi.org/10.1038/s41467-019-08948-x (Fig. 4)
 - ```get_GHZ_stars_for_nd_simple_cubic```: Micro-graph-states that can be fused to a large graph that will form an n-dimensional simple cubic lattice (if all fusions work and there is no loss).
 
-## percolation simulations: getting started
+## getting started
 
 To get started, we suggest having a look at the various examples in the folder ```percolation_c```. The ```C``` implementation uses the build system ```meson``` and you can compile all examples with the following commands:
 
@@ -76,5 +76,3 @@ In addition, the continous integration will run the tests with ```valgrind``` as
 
 When adding new features, you can also add new tests by simply adding the name of the tests to the file ```tests/meson.build```.
 
-## percolation simulations: Python vs. C
-The implementations in ```percolation_py``` and ```percolation_C``` are different in some aspects. In contrast to the ```Python``` implementation, the ```C``` implementation has the advantage that a (modified) Newman-Ziff algorithm can be used which makes the simulations much faster.

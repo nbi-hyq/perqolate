@@ -14,7 +14,7 @@
    site-percolation: https://doi.org/10.1016/S0034-4877(12)60036-6 */
 int main(){
   srand(17284);
-  int64_t lsize = 70; // size in each dimension
+  int64_t lsize = 67; // size in each dimension
   bool periodic = false; // no periodic boundaries
   bool get_size = false; // check percolation, not determine size of largest connected component
   bool static_center = false;
