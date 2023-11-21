@@ -12,7 +12,7 @@
 /* reference percolation simulations (using Newman-Ziff method) */
 int main(){
   srand(247822);
-  int64_t lsize = 75; // size in each dimension
+  int64_t lsize = 70; // size in each dimension
   bool periodic = false; // no periodic boundaries
   bool get_size = false; // check percolation, not determine size of largest connected component
   bool static_center = false;
