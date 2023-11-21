@@ -9,7 +9,7 @@
 #include "../inc/percolation_main.h"
 
 int main(){
-  srand(247839);
+  srand(73628);
   int rt = 0; // return
 
   /* simple check for random number uniformity over maximum range */
@@ -36,5 +36,5 @@ int main(){
   free(num);
 
   printf("%i", rt);
-  return 0;  //rt; // TBD: check why that does not work on windows system
+  return rt;
 }
