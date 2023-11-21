@@ -24,9 +24,9 @@ int main(){
   }
 
   for (int64_t i=0; i<len; i++){
-    double h = (double)sum[i] / ((double)(len - 1)/2.0) / num_rep;
-    printf("%f, ", h);
-    if (h < 1 - 4/sqrt(num_rep) || h > 1 + 4/sqrt(num_rep)) rt = 1;
+    double h = (double)sum[i] / num_rep;
+    double m = ((double)(len - 1)/2.0);
+    if (h < m - 2.0*m/sqrt(12)/sqrt(num_rep)*5 || h > m + 2.0*m/sqrt(12)/sqrt(num_rep)*5) rt = 1; // h is uniformly distributed for num_rep==1
   }
   free(sum);
 
@@ -42,8 +42,10 @@ int main(){
     }
     for (uint64_t i=0; i < a_rg[j]; i++){
       int h = num_rep / a_rg[j];
-      if (frequ[i] < h - 4*sqrt(h) || frequ[i] > h + 4*sqrt(h)) rt = 1;
-      printf("%f %i %f\n ", h - 4*sqrt(h), frequ[i], h + 4*sqrt(h));
+      if (frequ[i] < h - 5*sqrt(h) || frequ[i] > h + 5*sqrt(h)){ // frequ[i] is Poisson distributed
+        rt = 1;
+        printf("%f %i %f\n ", h - 5*sqrt(h), frequ[i], h + 5*sqrt(h));
+      }
     }
     free(frequ);
   }
@@ -64,7 +66,7 @@ int main(){
     rt = 1;
     printf("%f %i %f\n", num_rep/2 - 5*sqrt(num_rep)/2, cnt_low, num_rep/2 + 5*sqrt(num_rep)/2);
   }
-  if (mean > (1ul << 62) + (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5 || mean < (1ul << 62) - (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5){
+  if (mean > (1ul << 62) + (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5 || mean < (1ul << 62) - (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5){ // mean is uniformly distributed for num_rep==1
     rt = 1;
     printf("%f\n %f\n %f\n", (1ul << 62) - (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5, mean, (1ul << 62) + (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5);
   }
