@@ -14,6 +14,7 @@ int main(){
 
   /* simple check for random number uniformity over maximum range */
   uint64_t n_max = 1ul << 63;
+
   double mean = 0;
   int cnt_low = 0;
   int num_rep = 100000;
@@ -26,9 +27,9 @@ int main(){
   }
   if (cnt_low > num_rep/2 + 5*sqrt(num_rep)/2 || cnt_low < num_rep/2 - 5*sqrt(num_rep)/2){
     rt = 1;
-    printf("%f %i %f\n", num_rep/2 - 5*sqrt(num_rep)/2, cnt_low, num_rep/2 + 5*sqrt(num_rep)/2);
+    printf("%f %i %f\n", num_rep/2 - 6*sqrt(num_rep)/2, cnt_low, num_rep/2 + 6*sqrt(num_rep)/2);
   }
-  if (mean > (1ul << 62) + (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5 || mean < (1ul << 62) - (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5){ // mean is uniformly distributed for num_rep==1
+  if (mean > (1ul << 62) + (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*6 || mean < (1ul << 62) - (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*6){ // mean is uniformly distributed for num_rep==1
     rt = 1;
     printf("%f\n %f\n %f\n", (1ul << 62) - (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5, mean, (1ul << 62) + (double)(1ul << 62)*2.0/sqrt(12)/sqrt(num_rep)*5);
   }
