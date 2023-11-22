@@ -94,7 +94,7 @@ static uint64_t rand63(void) {
 
 /* get random number with more than 32-bit precision, uniform in range [0, n) */
 uint64_t rand_range(uint64_t n) {
-  uint64_t max = (1ul << 63) - (1ul << 63) % n - 1;
+  uint64_t max = (1ULL << 63) - (1ULL << 63) % n - 1;
   uint64_t r = rand63();
   while (r > max) r = rand63();
   return r % n;
