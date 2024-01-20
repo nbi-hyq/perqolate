@@ -1,22 +1,22 @@
 # perqolate
 - ```C```-code for percolation simulations of undirected graphs, graph states, fusion networks.
-- Some simulation results can be found here: https://arxiv.org/abs/2304.03796
+- All algorithms are described in https://arxiv.org/abs/2312.04639. Simulation results using ```perqolate``` can be found in https://arxiv.org/abs/2304.03796
 
 ## features
 - Percolation simulations of graphs/lattices. Percolation models: site-, bond-, and site-bond, bond-site
     - fast due to the use of the algorithm by Newman and Ziff (https://doi.org/10.1103/PhysRevE.64.016706)
 - Determine cluster spanning (percolation) or largest connected component size of graphs.
-- Simulate fusion networks constructing large graph states via rotated type-II fusion of star-shaped resource states (see https://arxiv.org/abs/2304.03796 (Fig. A5(d)), https://doi.org/10.1103/PhysRevLett.115.020502 (Fig. 4) for type-II fusion.). Loss of photons used for the fusions is treated by removing/measuring the neighbors of both fusion photons. (speed-up with modified Newman-Ziff algorithm)
+- Simulate fusion networks constructing large graph states via rotated type-II fusion of star-shaped resource states (see https://arxiv.org/abs/2304.03796 (Fig. A5(d)), https://doi.org/10.1103/PhysRevLett.115.020502 (Fig. 4) for type-II fusion.). Loss of photons used for the fusions is treated by removing/measuring the neighbors of both fusion photons. Speed-up with modified Newman-Ziff algorithm (see https://arxiv.org/abs/2312.04639). 
 - Simulation of fusion networks using repeat-until-success method to boost the fusion probability. Photon loss can be simulated efficiently with modified Newman-Ziff algorithm.
 - Simutate loss on graph states where loss is simulated by removing neighbors of a lost qubit from the graph by measuring them in the Z-basis. (speed-up with modified Newman-Ziff algorithm)
 - Tests and continuous integration
-- Examples and easy compilation via meson
+- Examples and easy project compilation via ```meson``` and ```ninja```
 
 ## overview
 
-In the folder ```src``` you find a ```C``` implementation that forms the main part of the code. Generally, there are two types of simulations that can be done. The first type of simulation determines the size of the largest connected component of a graph after some random process such as removing edges or loss has been applied. The second type of simulation determines whether or not two sides of a graph lattice are connected (cluster spanning). In the given examples, the parameter ```get_size``` determines which simulation is used (```get_size==true``` for method1 and ```get_size==false``` for method2).
+In the folder ```src``` you find a ```C``` implementation that forms the main part of the code. Generally, there are two types of simulations that can be done. The first one determines the size of the largest connected component of a graph after some random process such as removing edges or loss has been applied. The second type of simulation determines whether or not two sides of a graph lattice are connected (cluster spanning). In the given examples, the parameter ```get_size``` determines which simulation is used (```get_size==true``` for method1 and ```get_size==false``` for method2).
 
-Given some initial graph, there are several types of random processes that can be applied to the graph and decreasing/increasing its connectivity. These processes are applied by the following functions that can be found in the file ```src/percolation_main.c```:
+Given some initial graph, there are several types of random processes that can be applied to the graph and decrease/increase its connectivity. These processes are applied by the following functions that can be found in the file ```src/percolation_main.c```:
 - ```percolate_site```: site-percolation simulation on a classical graph using the Newman-Ziff method to increase the speed.
 - ```percolate_bond```: bond-percolation simulation on a classical graph using the Newman-Ziff method to increase the speed.
 - ```apply_loss_nz```: apply loss to a graph representing a graph state. Similar to ```apply_loss```, ```apply_loss_bfs``` but more efficient.
@@ -50,7 +50,7 @@ The following functions do not generate connected graphs but fusions are specifi
 
 ## getting started
 
-To get started, we suggest having a look at the various examples. We use the build system ```meson``` and you can compile all examples with the following commands:
+To get started, you find various simulation files in ```examples```. We use the build systems ```meson``` and ```ninja```. If a compiler such as ```gcc``` is installed, you can compile all examples with the following commands:
 
 ```
 $ meson setup build --buildtype=release
@@ -58,7 +58,7 @@ $ cd build/
 $ ninja
 ```
 
-By selecting the option ```--buildtype=release```, the compiler will do optimizations which will reduce the running time. For debugging with tools such as ```cgdb``` or ```valgrind```, do not select this option. Note that the outlined compilation procedure requires ```meson``` the compiler ```ninja``` to be present on your system. If you haven't installed it yet, you can do so by running (on a ubuntu distribution):
+By selecting the option ```--buildtype=release```, the compiler will do optimizations which will reduce the running time. For debugging with tools such as ```cgdb``` or ```valgrind```, do not select this option. You can install the required programs by running (on a ubuntu distribution):
 
 ```
 $ sudo apt install meson
@@ -70,7 +70,5 @@ If you make any changes/improvements, we suggest validating everything with the 
 $ cd build/
 $ meson test
 ```
-In addition, the continous integration will run the tests with ```valgrind``` as a wrapper.
-
-When adding new features, you can also add new tests by simply adding the name of the tests to the file ```tests/meson.build```.
+In addition, the continous integration will run the tests with ```valgrind``` as a wrapper. When adding new features, you can also add new tests by simply adding the name of the tests to the file ```tests/meson.build```.
 
