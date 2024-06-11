@@ -37,6 +37,7 @@ more_examples = [
   'example_loss_sweep',
   'percol_example_fusion',
   'percol_example_loss',
+  'bond_syndrome_graphs',
 ]
 
 foreach t : examples
