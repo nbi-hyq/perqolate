@@ -26,6 +26,8 @@ examples = [
   'percol_example_bond',
   'percol_example_site',
   'complex_neighborhoods',
+  'unit_graph',
+  'unit_graph_load',
 ]
 
 more_examples = [
