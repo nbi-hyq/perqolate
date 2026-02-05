@@ -744,6 +744,60 @@ Graph get_lattice_from_nd_simple_cubic_and_vectors(int64_t lsize, uint8_t n_dim,
   return g;
 }
 
+/* construct graph from unit graph (generalizes get_lattice_from_nd_simple_cubic_and_vectors and complex neighborhood) */
+Graph get_lattice_from_unit_graph(UnitGraph* u, int64_t lsize, uint8_t n_dim, bool static_center, bool periodic, bool get_size, bool edge_list){
+  int64_t numUnit = 1;
+  for(uint8_t j=0;j<n_dim;j++) numUnit *= lsize; // number of nodes
+  Graph g = new_graph(numUnit * u->nnode, u->num_nb_max, get_size, edge_list, false);
+
+  int64_t uc_vec[n_dim]; // digital system representation unit-cell index
+  for(int64_t i_unit=0; i_unit < numUnit; i_unit++){
+    for(uint8_t u_nd=0; u_nd<u->nnode; u_nd++){ // loop over all nodes in unit graph
+      uint8_t nb_pos_next = 0; // position of next free position for neighbor in nn
+      int64_t i_node = i_unit * u->nnode + u_nd; // index in periodic graph
+      for(uint8_t u_pos_nb=0; u_pos_nb<u->num_nb[u_nd]; u_pos_nb++){ // loop over all neighbors
+        index_to_digital_vec(i_unit, uc_vec, n_dim, lsize); // get/reset digital system representation uc_vec for i_unit
+        bool stop = false; // stops when it becomes clear that uc_vec would be outside the lattice
+        for(int digit_pos=0; digit_pos<n_dim; digit_pos++){
+          uc_vec[digit_pos] += u->blk_vec[u->i_vec[u_nd][u_pos_nb] * n_dim + digit_pos];
+          if(uc_vec[digit_pos] < 0){
+            if(periodic){uc_vec[digit_pos] += lsize;}
+            else{stop=true; break;}
+          } else if (uc_vec[digit_pos] > lsize - 1){
+            if(periodic){uc_vec[digit_pos] -= lsize;}
+            else{stop=true; break;}
+          }
+        }
+        if(stop == false){
+          int64_t i_nb = digital_vec_to_index(uc_vec, n_dim, lsize) * u->nnode + u->nb[u_nd][u_pos_nb];
+          g.nn[i_node * u->num_nb_max + (nb_pos_next)] = i_nb;  // compute neighbor index with digital_vec_to_index
+          if(edge_list) append_edge(&g, i_node, nb_pos_next);
+          nb_pos_next++;
+        }
+      }
+      g.len_nb[i_node] = nb_pos_next; // number of neighbors
+    }
+  }
+
+  if(static_center) memset(g.static_node, 1, g.nnode * sizeof(bool));
+  else memset(g.static_node, 0, g.nnode * sizeof(bool));
+  if(!get_size){
+    memset(g.start, 0, g.nnode * sizeof(bool));
+    memset(g.stop, 0, g.nnode * sizeof(bool));
+    for (int64_t i_unit=0; i_unit<numUnit/lsize; i_unit++){
+       for(uint8_t u_nd=0; u_nd<u->nnode; u_nd++){
+         g.start[i_unit * u->nnode + u_nd] = 1;
+       }
+    }
+    for (int64_t i_unit=numUnit/lsize*(lsize-1); i_unit<numUnit; i_unit++){
+      for(uint8_t u_nd=0; u_nd<u->nnode; u_nd++){
+        g.stop[i_unit * u->nnode + u_nd] = 1;
+      }
+    }
+  }
+  return g;
+}
+
 /* detached micro-clusters to create an n-dimensional simple cubic lattice (periodic boundary conditions) */
 Graph get_GHZ_stars_for_nd_simple_cubic(int64_t lsize, uint8_t n_dim, bool static_center, bool periodic, bool get_size){
   int64_t num_cluster = 1;
