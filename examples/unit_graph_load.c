@@ -47,12 +47,12 @@ static int scan_edge_vecs(char* line, int8_t* arry){
 int main(int argc, char **argv){
   /* set simulation parameters */
   srand(2572457);
-  int64_t lsize = 200; // size in each dimension
-  int n_avg = 200; // number of repetitions for averaging
+  int64_t lsize = 50; // size in each dimension
+  int n_avg = 500; // number of repetitions for averaging
   bool periodic = false; // no periodic boundaries
   bool get_size = false; // check percolation, not determine size of largest connected component
   bool static_center = false;
-  uint8_t dimension = 2; // dimension of lattice
+  uint8_t dimension = 3; // dimension of lattice
   bool list_edges = true; // must be true for bond-percolation
 
   /* check number of args, count lines */
@@ -80,6 +80,11 @@ int main(int argc, char **argv){
     fgets(line, MAX_LINE, fp); // 2nd line is the edge vectors of the unit graph
     scan_edge_vecs(line, blk_vec);
 
+    if (nedge == 0){ // invalid lattice
+      printf("0\n");  // put 0 as placeholder
+      continue;
+    }
+
     UnitGraph unt = new_unit_graph(blk_edges, blk_vec, nedge, dimension);
 
     /* create periodic graph */
@@ -88,14 +93,6 @@ int main(int argc, char **argv){
     /* run simulation */
     int64_t idxLambda;
     double avg = 0;
-    for(int i=0; i < n_avg; i++) {
-      int64_t* percolated = percolate_site(&g, 1.0, &idxLambda); // site-percolation given fixed bond probability (Newman-Ziff method)
-      free(percolated);
-      avg += (double)idxLambda/g.nnode;
-    }
-    printf("%i %f ", i_lattice, avg/n_avg);
-
-    avg = 0;
     for(int i=0; i < n_avg; i++) {
       int64_t* percolated = percolate_bond(&g, 1.0, &idxLambda); // bond-percolation given fixed site probability (Newman-Ziff method)
       free(percolated);
