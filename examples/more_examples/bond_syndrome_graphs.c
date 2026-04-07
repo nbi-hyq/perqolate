@@ -27,15 +27,15 @@ int main(){
   vecs[dimension*4+1] = -1; vecs[dimension*4+2] = 1;
   vecs[dimension*5+0] = -1; vecs[dimension*5+2] = 1;
 
-  for(int lsize=50; lsize<251; lsize+=50){
+  for(int lsize=50; lsize<200; lsize+=50){
     Graph g = get_lattice_from_nd_simple_cubic_and_vectors(lsize, dimension, vecs, num_vec, static_center, periodic, get_size, list_edges);
 
     int64_t idxLambda;
     double avg = 0;
     for(int i=0; i < n_avg; i++) {
-      int64_t* percolated = percolate_site(&g, 1.0, &idxLambda); // site-percolation given fixed bond probability (Newman-Ziff method)
+      int64_t* percolated = percolate_bond(&g, 1.0, &idxLambda); // bond-percolation given unity site probability (Newman-Ziff method)
       free(percolated);
-      avg += (double)idxLambda/g.nnode;
+      avg += (double)idxLambda/g.num_edges;
     }
     printf("%f ", avg/n_avg);
     free_graph(&g);
