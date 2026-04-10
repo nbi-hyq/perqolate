@@ -32,6 +32,7 @@ tests = [
   'rand_range_a',
   'rand_range_b',
   'rand_lib',
+  'unit_graph',
 ]
 
 foreach t : tests

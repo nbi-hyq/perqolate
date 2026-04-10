@@ -770,7 +770,8 @@ Graph get_lattice_from_unit_graph(UnitGraph* u, int64_t lsize, uint8_t n_dim, bo
         }
         if(stop == false){
           int64_t i_nb = digital_vec_to_index(uc_vec, n_dim, lsize) * u->nnode + u->nb[u_nd][u_pos_nb];
-          g.nn[i_node * u->num_nb_max + (nb_pos_next)] = i_nb;  // compute neighbor index with digital_vec_to_index
+          g.nn[i_node * u->num_nb_max + nb_pos_next] = i_nb; // compute neighbor index with digital_vec_to_index
+          if(u->edge_label != NULL && i_node < i_nb) g.edge_label[i_node * u->num_nb_max + nb_pos_next] = u->edge_label[u->i_vec[u_nd][u_pos_nb]];
           if(edge_list) append_edge(&g, i_node, nb_pos_next);
           nb_pos_next++;
         }

@@ -16,6 +16,7 @@ Graph new_graph(int64_t nnode, uint8_t num_nb_max, bool get_size, bool edge_list
   g.len_nb = malloc(nnode); // until which index there are neighbors (255 neighbors max)
   g.edge_node = edge_list ? malloc((nnode * (size_t)num_nb_max / 2 + 1) * sizeof(int64_t)) : NULL; // 1st node in edge (only for looping over edges)
   g.edge_idx = edge_list ? malloc(nnode * (size_t)num_nb_max / 2 + 1) : NULL; // index of 2nd node of edge in nn (only for looping over edges)
+  g.edge_label = malloc(nnode * (size_t)num_nb_max * sizeof(uint8_t)); // option to label edges for non-uniform bond-percolation
   g.fusion_partner = fusion_list ? malloc(nnode * sizeof(int64_t)) : NULL; // partner node for fusion, -1 means no fusion node
   g.fusion_success = fusion_list ? malloc(nnode * sizeof(bool)) : NULL; // successful fusion or not
   g.fusion_node = fusion_list ? malloc(nnode * sizeof(bool)) : NULL; // node that is used for fusion
@@ -35,9 +36,10 @@ input: unidirectional unit graph in block-representation with node numbering 0..
 output: UnitGraph struct (undirected unit graph in adjacency list representation)
 blk_edges: one edge is two node numbers next to each other
 blk_vec: one block of dim numbers is a connection vector
+blk_edge_label: optional edge label for non-uniform percoaltion (same order as edge vectors)
 nedge: number of edges in unit graph
 dim: dimension of p-graph */
-UnitGraph new_unit_graph(uint8_t* blk_edges, int8_t* blk_vec, uint8_t nedge, uint8_t dim){
+UnitGraph new_unit_graph(uint8_t* blk_edges, int8_t* blk_vec, uint8_t* blk_edge_label, uint8_t nedge, uint8_t dim){
   UnitGraph u;
   u.dim = dim;
   u.nnode = 0;
@@ -59,8 +61,10 @@ UnitGraph new_unit_graph(uint8_t* blk_edges, int8_t* blk_vec, uint8_t nedge, uin
     u.i_vec[i] = malloc(sizeof(uint8_t) * u.num_nb[i]);
   }
 
-  /* blk_vec: unidirection representation, u.blk_vec: two-directional representation of unit-graph */
+  /* blk_vec: unidirectional representation, u.blk_vec: two-directional representation of unit-graph */
   u.blk_vec = malloc(2 * sizeof(uint8_t) * nedge * dim);
+  if (blk_edge_label != NULL) u.edge_label = malloc(2 * sizeof(uint8_t) * nedge);
+  else u.edge_label = NULL;
   int blk_pos = 0;
   uint8_t* nb_pos = malloc(sizeof(uint8_t) * u.nnode);
   memset(nb_pos, 0, sizeof(uint8_t) * u.nnode);
@@ -70,10 +74,12 @@ UnitGraph new_unit_graph(uint8_t* blk_edges, int8_t* blk_vec, uint8_t nedge, uin
     u.nb[nd0][nb_pos[nd0]] = nd1;
     u.i_vec[nd0][nb_pos[nd0]++] = blk_pos;
     for(uint8_t d=0; d<dim; d++) u.blk_vec[blk_pos * dim + d] = blk_vec[i * dim + d];
+    if (blk_edge_label != NULL) u.edge_label[blk_pos] = blk_edge_label[i];
     blk_pos++;
     u.nb[nd1][nb_pos[nd1]] = nd0;
     u.i_vec[nd1][nb_pos[nd1]++] = blk_pos;
     for(uint8_t d=0; d<dim; d++) u.blk_vec[blk_pos * dim + d] = - blk_vec[i * dim + d]; // also store vector in opposite direction
+    if (blk_edge_label != NULL) u.edge_label[blk_pos] = blk_edge_label[i]; // with same edge label
     blk_pos++;
   }
 
@@ -91,6 +97,7 @@ void free_graph(Graph* g){
   free(g->nn);
   free(g->edge_node);
   free(g->edge_idx);
+  free(g->edge_label);
   free(g->len_nb);
   free(g->fusion_node);
   free(g->fusion_partner);
@@ -108,5 +115,6 @@ void free_unit_graph(UnitGraph* u){
   free(u->nb);
   free(u->i_vec);
   free(u->num_nb);
+  free(u->edge_label);
   free(u->blk_vec);
 }

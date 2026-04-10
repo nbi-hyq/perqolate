@@ -9,9 +9,9 @@
 
 /* construct periodic graph from unit-graph */
 int main(){
-  srand(6735829);
-  int64_t lsize = 200; // size in each dimension
-  int n_avg = 1000; // number of repetitions for averaging
+  srand(2789234);
+  int64_t lsize = 50; // size in each dimension
+  int n_avg = 400; // number of repetitions for averaging
   bool periodic = false; // no periodic boundaries
   bool get_size = false; // check percolation, not determine size of largest connected component
   bool static_center = false;
@@ -39,7 +39,7 @@ int main(){
     free(percolated);
     avg += (double)idxLambda/g.nnode;
   }
-  printf("%f\n", avg/n_avg);
+  int r = (avg/n_avg < 0.67 || avg/n_avg > 0.72);
 
   avg = 0;
   for(int i=0; i < n_avg; i++) {
@@ -47,9 +47,9 @@ int main(){
     free(percolated);
     avg += (double)idxLambda/g.num_edges;
   }
-  printf("%f\n", avg/n_avg);
+  r |= (avg/n_avg < 0.625 || avg/n_avg > 0.675);
 
   free_graph(&g);
   free_unit_graph(&unt);
-  return 0;
+  return r;
 }
