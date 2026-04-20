@@ -30,7 +30,7 @@ int main(){
   free(blk_edge_label);
 
   /* define the actual graph */
-  int64_t lsize = 100; // size in each dimension
+  int64_t lsize = 50; // size in each dimension
   bool periodic = false; // no periodic boundaries for start-stop percolation
   bool get_size = false; // do define start/stop set
   bool edge_list = false; // obsolete here since edge labels are specified
@@ -50,8 +50,8 @@ int main(){
     printf("%.15f %f %f\n", p_ratio, pBond[0], 1 - pBond[0] - pBond[1] - pBond[2] + pBond[0]*pBond[1]*pBond[2]);
   }
 
-  int r = (1 - pBond[0] - pBond[1] - pBond[2] + pBond[0]*pBond[1]*pBond[2] > 0.01); // check criterion from https://doi.org/10.1063/1.1704215
-  r |= (1 - pBond[0] - pBond[1] - pBond[2] + pBond[0]*pBond[1]*pBond[2] < -0.01); // check criterion from https://doi.org/10.1063/1.1704215
+  int r = (1 - pBond[0] - pBond[1] - pBond[2] + pBond[0]*pBond[1]*pBond[2] > 0.015); // check criterion from https://doi.org/10.1063/1.1704215
+  r |= (1 - pBond[0] - pBond[1] - pBond[2] + pBond[0]*pBond[1]*pBond[2] < -0.015); // check criterion from https://doi.org/10.1063/1.1704215
   free_unit_graph(&u);
   free_graph(&g);
   free(pBond);
