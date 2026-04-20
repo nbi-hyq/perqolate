@@ -34,6 +34,7 @@ tests = [
   'rand_lib',
   'unit_graph',
   'inhomogeneous_bond',
+  'inhomogeneous_bond_honeycomb',
 ]
 
 foreach t : tests
