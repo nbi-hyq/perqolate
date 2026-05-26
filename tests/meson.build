@@ -35,6 +35,7 @@ tests = [
   'unit_graph',
   'inhomogeneous_bond',
   'inhomogeneous_bond_honeycomb',
+  'inhomogeneous_bond_dynamic',
 ]
 
 foreach t : tests
