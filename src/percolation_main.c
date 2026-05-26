@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
 #include "../inc/global.h"
 #include "../inc/graph_type.h"
 #include "../inc/graph_construction.h"
@@ -219,6 +220,96 @@ static void crawl_nb_label_measure_z(Graph* g, int64_t node_idx){
       }
     }
   }
+}
+
+/* bond percolation where edges can have different probabilities. Only check percolation, not largest component, no Newman-Ziff method
+   pBond: probability that6 node is present (array of probabilities)
+   num_rep: number of repetitions for averaging */
+uint64_t non_uniform_bond_percol(Graph* g, float* pBond, uint64_t num_rep){
+  uint64_t* bf_list = malloc(g->nnode * sizeof(uint64_t)); // array for breadth-first graph traversal
+  bool* visited = malloc(g->nnode * sizeof(bool)); // visted means in bf_list
+  uint64_t cnt = 0;
+
+  for(uint64_t r=0; r<num_rep; r++){
+    uint64_t bf_pos = 0;
+    uint64_t bf_len = 0;
+    memset(visited, 0, g->nnode * sizeof(bool));
+    for(int64_t i=0; i<g->nnode; i++){
+      if (g->start[i]){
+        bf_list[bf_len++] = i; // start from one side of graph
+        visited[i] = 1;
+      }
+    }
+    bool percolated = false;
+
+    while(bf_pos < bf_len){
+      uint64_t node_idx = bf_list[bf_pos];
+      for(uint8_t i=0; i<g->len_nb[node_idx]; i++){
+        uint64_t nb_idx = g->nn[node_idx*g->num_nb_max + i];
+        int64_t edge_idx = get_edge_idx(g, node_idx, nb_idx);
+        if(!visited[nb_idx] && pBond[g->edge_label[edge_idx]] > (float)rand()/(float)RAND_MAX){
+          visited[nb_idx] = 1;
+          bf_list[bf_len++] = nb_idx;
+          if(g->stop[nb_idx]) percolated = true;
+        }
+      }
+      if (percolated){
+        cnt++;
+        break;
+      }
+      bf_pos++;
+    }
+  }
+
+  free(bf_list);
+  free(visited);
+  return cnt;
+}
+
+/* bond percolation where edges can have different probabilities. Chose number of repetitions dynamically, only check percolation, not largest component, no Newman-Ziff method
+   pBond: probability that6 node is present (array of probabilities)
+   relative_error_target: relative error of the percolation probability that one aims at, determines number of repetitions
+   cnt[0] number of repetitions, cnt[1] number of percolation events*/
+void non_uniform_bond_percol_dynamic(Graph* g, float* pBond, float relative_error_target, uint64_t* cnt){
+  uint64_t* bf_list = malloc(g->nnode * sizeof(uint64_t)); // array for breadth-first graph traversal
+  bool* visited = malloc(g->nnode * sizeof(bool)); // visted means in bf_list
+  cnt[0] = 0; // count all repetitions
+  cnt[1] = 0; // count percolation events
+
+  while(cnt[1] == 0 || cnt[0] < 100 || relative_error_target < sqrt((double)(cnt[0]-cnt[1])/cnt[0]) / sqrt(cnt[1])){ // estimate relative error by binomial statistics, cnt[0] < 100 is to avoid cnt[0]==cnt[1] boundary case
+    cnt[0] += 1;
+    uint64_t bf_pos = 0;
+    uint64_t bf_len = 0;
+    memset(visited, 0, g->nnode * sizeof(bool));
+    for(int64_t i=0; i<g->nnode; i++){
+      if (g->start[i]){
+        bf_list[bf_len++] = i; // start from one side of graph
+        visited[i] = 1;
+      }
+    }
+    bool percolated = false;
+
+    while(bf_pos < bf_len){
+      uint64_t node_idx = bf_list[bf_pos];
+      for(uint8_t i=0; i<g->len_nb[node_idx]; i++){
+        uint64_t nb_idx = g->nn[node_idx*g->num_nb_max + i];
+        int64_t edge_idx = get_edge_idx(g, node_idx, nb_idx);
+        if(!visited[nb_idx] && pBond[g->edge_label[edge_idx]] > (float)rand()/(float)RAND_MAX){
+          visited[nb_idx] = 1;
+          bf_list[bf_len++] = nb_idx;
+          if(g->stop[nb_idx]) percolated = true;
+        }
+      }
+      if (percolated){
+        cnt[1]++;
+        break;
+      }
+      bf_pos++;
+    }
+  }
+
+  free(bf_list);
+  free(visited);
 }
 
 /* crawl connected graph component starting from a given node, don't take paths with LOST, ALLPLYZ

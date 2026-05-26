@@ -19,5 +19,7 @@ int64_t apply_loss(Graph* g, float pSite);
 int64_t apply_loss_bfs(Graph* g, float pSite);
 int64_t* apply_loss_nz(Graph* g, float pBond, bool considerStaticNode, int64_t* numStaticNode, int64_t* idxLambda);
 float* get_expectation_value(float* sweep_prob, int sweep_len, int64_t* largest_component, int64_t N, int64_t nStatic, int64_t size_max, bool approx, bool mute);
+uint64_t non_uniform_bond_percol(Graph* g, float* pBond, uint64_t num_rep);
+void non_uniform_bond_percol_dynamic(Graph* g, float* pBond, float relative_error_target, uint64_t* cnt);
 
 #endif

@@ -85,7 +85,7 @@ int main(int argc, char **argv){
       continue;
     }
 
-    UnitGraph unt = new_unit_graph(blk_edges, blk_vec, nedge, dimension);
+    UnitGraph unt = new_unit_graph(blk_edges, blk_vec, NULL, nedge, dimension);
 
     /* create periodic graph */
     Graph g = get_lattice_from_unit_graph(&unt, lsize, dimension, static_center, periodic, get_size, list_edges);
