@@ -37,7 +37,7 @@ int main(){
   Graph g = get_lattice_from_unit_graph(&u, lsize, n_dim, false, periodic, get_size, edge_list);
 
   /* run start-stop bond percolation */
-  uint64_t num_rep = 1000; // repetitions for averaging
+  uint64_t num_rep = 500; // repetitions for averaging
   float* pBond = malloc((size_t)nedge * sizeof(float));
   for(uint8_t i=0; i<nedge; i++) pBond[i] = 0.3; // some numbers such that by adapting pBond[0] one can reach criticality
   pBond[0] = 0.4; // start close to criticality for test speed

@@ -44,7 +44,7 @@ int main(){
   float relative_error_target = 0.05; // relative error of percolation probability
   uint64_t cnt[] = {1, 1};
 
-  int num_step = 15;
+  int num_step = 10;
   for (int i=0; i<num_step; i++){   
     non_uniform_bond_percol_dynamic(&g, pBond, relative_error_target, cnt);
     double p_ratio = (double)cnt[1] / cnt[0];
