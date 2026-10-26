@@ -208,6 +208,55 @@ int64_t* percolate_bond(Graph* g, float pSite, int64_t* idxLambda){ // TBD: supp
   return largest_component;
 }
 
+// classical: percolation simulation with some bond probabilities fixed, others added one-by-one in Newman-Ziff style (those edges are indicated by negative value, e.g. -1)
+double percolate_bond_nonuniform_nz(Graph* g, float* p_fix){
+  int64_t i,s1,s2,r1,r2; // s1,s2: start node index; r1,r2: root node index
+  int64_t big = 0; // size of largest component
+  int64_t* order = permutation(g->num_edges);  // random ordering of edge indices
+  for(i=0;i<g->nnode;i++){
+    if (!g->get_size && g->start[i]) g->ptr[i] = START; // start nodes for pecolation
+    else if (!g->get_size && g->stop[i]) g->ptr[i] = STOP; // stop nodes for pecolation
+    else g->ptr[i] = -1; // make node isolated (own root)
+  }
+  /* egdes with fixed probability */
+  int64_t cnt0 = 0; // count the other edges
+  for (i=0;i<g->num_edges;i++){
+    s1 = g->edge_node[order[i]]; // get node index 1 of the edge
+    s2 = g->nn[s1*g->num_nb_max + g->edge_idx[order[i]]]; // get node index 2 of the edge
+    float pfx = p_fix[g->edge_label[s1*g->num_nb_max + g->edge_idx[order[i]]]];
+    if(pfx >= 0){
+      if((float)rand()/(float)RAND_MAX < pfx){
+        r2 = findroot(g, s2); //find root and do path compression
+        r1 = findroot(g, s1); //find root and do path compression
+        if (r2!=r1){
+          if((g->ptr[r1] == START && g->ptr[r2] == STOP) || (g->ptr[r2] == START && g->ptr[r1] == STOP)){
+            free(order);
+            return 0.0; // percolation (no change when adding more bonds)
+          }
+          merge_root(g, r1, r2, &big); // update largest component size, update root (return not needed)
+        }
+      }
+    } else cnt0++; // count the edges that are added with Newman-Ziff method
+  }
+  /* egdes that are added one by one */
+  int64_t cnt = 0; // count all edges with non-fixed probability
+  for (i=0;i<g->num_edges;i++){
+    s1 = g->edge_node[order[i]]; // get node index 1 of the edge
+    s2 = g->nn[s1*g->num_nb_max + g->edge_idx[order[i]]]; // get node index 2 of the edge
+    if(p_fix[g->edge_label[s1*g->num_nb_max + g->edge_idx[order[i]]]] < 0){
+      cnt++;
+      r2 = findroot(g, s2); //find root and do path compression
+      r1 = findroot(g, s1); //find root and do path compression
+      if (r2!=r1){
+        if((g->ptr[r1] == START && g->ptr[r2] == STOP) || (g->ptr[r2] == START && g->ptr[r1] == STOP)) break; // percolation (no change when adding more bonds)
+        merge_root(g, r1, r2, &big); // update largest component size, update root (return not needed)
+      }
+    }
+  }
+  free(order);
+  return (double)cnt / cnt0;
+}
+
 /* quantum: given lost qubit and fusions, determine which other qubits must be measured in Z */
 static void crawl_nb_label_measure_z(Graph* g, int64_t node_idx){
   int64_t nb_idx;

@@ -19,6 +19,7 @@ examples = [
   'example_fusion_sweep_nz_and_no_nz',
   'example_fusion_sweep_nz',
   'example_non_uniform_bond',
+  'example_non_uniform_bond_nz',
   'lattice_optimization_add',
   'lattice_optimization_rm',
   'percol_example_fusion_cmp_nz',
