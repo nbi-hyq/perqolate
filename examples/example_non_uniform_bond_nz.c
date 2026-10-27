@@ -47,7 +47,8 @@ int main(int argc, char *argv[]){
   float* pBond = malloc((size_t)nedge * sizeof(float));
   for(int64_t size=20; size<=160; size*=2){
     Graph g = get_lattice_from_unit_graph(&u, size, n_dim, false, periodic, get_size, edge_list);
-    pBond[1] = p_bnd_fix; pBond[2] = p_bnd_fix; // bonds transversal to spanning direction are fixed
+    pBond[1] = p_bnd_fix; // bonds in one direction transversal to spanning direction are fixed
+    pBond[2] = -1; // bonds in one transversal direction are added one-by-one in Newman-Ziff style
     pBond[0] = -1; // bonds in spanning direction are added one-by-one in Newman-Ziff style
     double threshold = 0;
     for(uint64_t r=0;r<num_rep;r++){
